@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/studywithme_test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:studywithme}
+    password: ${DB_PASSWORD:studywithme}
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
