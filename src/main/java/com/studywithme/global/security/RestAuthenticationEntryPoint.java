@@ -32,7 +32,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
             HttpServletResponse response,
             AuthenticationException authException
     ) throws IOException {
-        ErrorCode errorCode = ErrorCode.AUTH_UNAUTHORIZED;
+        ErrorCode errorCode = resolveErrorCode(request);
         String traceId = resolveTraceId();
         response.setStatus(errorCode.getHttpStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -40,6 +40,14 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setHeader(TRACE_ID_HEADER, traceId);
         objectMapper.writeValue(response.getOutputStream(), ErrorResponse.of(errorCode, traceId, null));
         log.warn("authenticationEntryPoint message={}", authException.getMessage());
+    }
+
+    private ErrorCode resolveErrorCode(HttpServletRequest request) {
+        Object attribute = request.getAttribute("authErrorCode");
+        if (attribute instanceof ErrorCode errorCode) {
+            return errorCode;
+        }
+        return ErrorCode.AUTH_UNAUTHORIZED;
     }
 
     private String resolveTraceId() {
