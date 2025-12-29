@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: studywithme-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: studywithme
+      MYSQL_USER: studywithme
+      MYSQL_PASSWORD: studywithme
+      MYSQL_ROOT_PASSWORD: studywithme
+      TZ: Asia/Seoul
+    ports:
+      - "3306:3306"
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    volumes:
+      - studywithme-mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "studywithme", "-pstudywithme"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  studywithme-mysql:
